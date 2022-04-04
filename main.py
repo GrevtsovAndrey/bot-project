@@ -13,7 +13,7 @@ TOKEN = 'BOT_TOKEN'
 # Функция приветствия пользователя
 def start(update, context):
     # Поприветствуем пользователя
-    update.message.reply_text("Привет, я мини-фотошоп бот. Для ознакомления с моим функционалом напиши команду /help")
+    update.message.reply_text("Привет, я фотошоп бот. Для ознакомления с моим функционалом напиши команду /help")
 
 
 def help(update, context):
