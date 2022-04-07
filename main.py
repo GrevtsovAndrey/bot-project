@@ -9,7 +9,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 # Копируем токен бота
-TOKEN = 'BOT_TOKEN'
+TOKEN = "5294422299:AAG8VQO8dV3thi-DE1UCNREFrI82NCVy3qY"
 
 # Создадим стартовую клавиатуру
 reply_keyboard = ["/help"]
