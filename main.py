@@ -1,8 +1,11 @@
 import logging
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
-from PIL import Image, ImageDraw
 
+from telegram import ReplyKeyboardRemove
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+
+import requests
+
+from PIL import Image
 
 # Запускаем логгирование
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
@@ -28,33 +31,16 @@ def start(update, context):
 def help(update, context):
     update.message.reply_text("Пока что я балбес")
 
-    # @bot.message_handler(content_types=['photo', 'document'])
-# def download_image(message):
-    # from pathlib import Path
-    # Path(f'files/{message.chat.id}/').mkdir(parents=True, exist_ok=True)
-    # if message.content_type == 'photo':
-        # file_info = bot.get_file(message.photo[len(message.photo) - 1].file_id)
-        # downloaded_file = bot.download_file(file_info.file_path)
-        # src = f'files/{message.chat.id}/' + file_info.file_path.replace('photos/', '')
-        # with open(src, 'wb') as new_file:
-            # new_file.write(downloaded_file)
-
-
-    # elif message.content_type == 'document':
-        # file_info = bot.get_file(message.document.file_id)
-        # downloaded_file = bot.download_file(file_info.file_path)
-        # src = f'files/{message.chat.id}/' + message.document.file_name
-        # with open(src, 'wb') as new_file:
-            # new_file.write(downloaded_file)
-
 
 def get_image(update, context):
-    global updater
-    file_info = updater.bot.get_file(update.message.photo[-1])
-    downloaded_file = updater.bot.download_file(file_info)
-    src = ""
-    with open(src, "wb") as new_file:
-        new_file.write(downloaded_file)
+    picture = update.message.photo[-1]
+    file = picture.file_id
+    obj = context.bot.get_file(file)
+    file_path = obj.file_path
+    response = requests.get(file_path)
+    out = open("telegram_image.jpg", "wb")
+    out.write(response.content)
+    out.close()
 
 
 def turn_right():
@@ -92,7 +78,7 @@ def main():
     # Создаем обработчики
     start_handler = CommandHandler("start", start)
     help_handler = CommandHandler("help", help)
-    image_handler = MessageHandler(Filters.document.image & (~Filters.command), get_image)
+    image_handler = MessageHandler(Filters.photo, get_image)
     close_keyboard_handler = CommandHandler("close", close_keyboard)
     turn_right_handler = CommandHandler("turn_right", turn_right)
     turn_left_handler = CommandHandler("turn_left", turn_left)
