@@ -49,10 +49,12 @@ def help(update, context):
 
 
 def get_image(update, context):
-    image = update.message.photo[-1]
-    src = "C/" + update.message.file_name
+    global updater
+    file_info = updater.bot.get_file(update.message.photo[-1])
+    downloaded_file = updater.bot.download_file(file_info)
+    src = ""
     with open(src, "wb") as new_file:
-        new_file.write(image)
+        new_file.write(downloaded_file)
 
 
 def turn_right():
