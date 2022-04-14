@@ -32,7 +32,7 @@ def help(update, context):
     update.message.reply_text("Пока что я балбес")
 
 
-def get_image(update, context):
+def new_image(update, context):
     picture = update.message.photo[-1]
     file = picture.file_id
     obj = context.bot.get_file(file)
@@ -43,27 +43,35 @@ def get_image(update, context):
     out.close()
 
 
-def turn_right():
+def turn_right(update, context):
     pass
 
 
-def turn_left():
+def turn_left(update, context):
     pass
 
 
-def flip_vertical():
+def flip_vertical(update, context):
+    im = Image.open("telegram_image.jpg")
+    pix_s = im.load()
+    x, y = im.size
+    for i in range(x // 2):
+        for j in range(y):
+            pix_s[i, j], pix_s[x - i - 1, j] = pix_s[x - i - 1, j], pix_s[i, j]
+    im.save("telegram_image.jpg")
+    id = update.message.chat.id
+    context.bot.send_photo(chat_id=id, photo=open("telegram_image.jpg", "rb"))
+
+
+def flip_horizontally(update, context):
     pass
 
 
-def flip_horizontally():
+def compression(update, context):
     pass
 
 
-def compression():
-    pass
-
-
-def getting_the_3D_effect():
+def getting_the_3D_effect(update, context):
     pass
 
 
@@ -78,7 +86,7 @@ def main():
     # Создаем обработчики
     start_handler = CommandHandler("start", start)
     help_handler = CommandHandler("help", help)
-    image_handler = MessageHandler(Filters.photo, get_image)
+    image_handler = MessageHandler(Filters.photo, new_image)
     close_keyboard_handler = CommandHandler("close", close_keyboard)
     turn_right_handler = CommandHandler("turn_right", turn_right)
     turn_left_handler = CommandHandler("turn_left", turn_left)
