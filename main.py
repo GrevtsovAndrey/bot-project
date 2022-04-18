@@ -1,6 +1,6 @@
 import logging
 
-from telegram import ReplyKeyboardRemove
+from telegram import ReplyKeyboardRemove, ReplyKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 import requests
@@ -15,8 +15,6 @@ logger = logging.getLogger(__name__)
 # Копируем токен бота
 TOKEN = "5294422299:AAG8VQO8dV3thi-DE1UCNREFrI82NCVy3qY"
 
-# Создадим стартовую клавиатуру
-
 
 # Функция удаления клавиатуры
 def close_keyboard(update, context):
@@ -25,13 +23,33 @@ def close_keyboard(update, context):
 
 # Функция приветствия пользователя
 def start(update, context):
-    update.message.reply_text("Привет, я фотошоп бот. Для ознакомления с моим функционалом напиши команду /help")
+    reply_keyboard = [["/help"]]
+    markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
+
+    update.message.reply_text("Привет, я фотошоп бот. Для ознакомления с моим функционалом напиши команду /help",
+                              reply_markup=markup)
 
 
+# Ознакомительная функция
 def help(update, context):
-    update.message.reply_text("Пока что я балбес")
+    # Клавиатура с функциями
+    reply_keyboard = [["/turn_right", "/turn_left"],
+                      ["/flip_vertical", "/flip_horizontally"],
+                      ["/white_black", "/3D_effect"]]
+    markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
+
+    update.message.reply_text("Для начала работы или изменения фото отправте его, \n"
+                              "Список команд: \n"
+                              "/turn_right - поворот вправо \n"
+                              "/turn_left - поворот влево \n"
+                              "/flip_vertical - отаржение по вертикали \n"
+                              "/flip_horizontally - отражение по горизонтали \n"
+                              "/while_black - черно-белый эффект \n"
+                              "/3D_effect - получение 3D эффекта",
+                              reply_markup=markup)
 
 
+# Функция получения изображения
 def new_image(update, context):
     picture = update.message.photo[-1]
     file = picture.file_id
@@ -41,6 +59,14 @@ def new_image(update, context):
     out = open("telegram_image.jpg", "wb")
     out.write(response.content)
     out.close()
+    # Создаем клавиатуру
+    reply_keyboard = [["/turn_right", "/turn_left"],
+                      ["/flip_vertical", "/flip_horizontally"],
+                      ["/white_black", "/3D_effect"]]
+    markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
+
+    update.message.reply_text("Изображение успешно получено",
+                              reply_markup=markup)
 
 
 def turn_right(update, context):
@@ -95,10 +121,6 @@ def white_black(update, context):
     context.bot.send_photo(chat_id=id, photo=open("telegram_image.jpg", "rb"))
 
 
-def compression(update, context):
-    pass
-
-
 def getting_the_3D_effect(update, context):
     delta = 8
     im = Image.open("telegram_image.jpg")
@@ -146,7 +168,6 @@ def main():
     flip_vertical_handler = CommandHandler("flip_vertical", flip_vertical)
     flip_horizontally_handler = CommandHandler("flip_horizontally", flip_horizontally)
     white_black_handler = CommandHandler("white_black", white_black)
-    compression_handler = CommandHandler("compression", compression)
     effect_handler = CommandHandler("3D_effect", getting_the_3D_effect)
 
     # Регистрируем обработчики
@@ -159,7 +180,6 @@ def main():
     dp.add_handler(flip_vertical_handler)
     dp.add_handler(flip_horizontally_handler)
     dp.add_handler(white_black_handler)
-    dp.add_handler(compression_handler)
     dp.add_handler(effect_handler)
 
     # Создадим клавиатуру для выбора одной из команд
