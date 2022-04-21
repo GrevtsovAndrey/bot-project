@@ -1,3 +1,5 @@
+# Импортируем нужные библиотеки и файл с функциями
+
 import image_functions
 
 import logging
@@ -35,8 +37,8 @@ def start(update, context):
 def help(update, context):
     # Клавиатура с функциями
     reply_keyboard = [["/turn_right", "/turn_left"],
-                      ["/flip_vertical", "/flip_horizontally"],
-                      ["/white_black", "/3D_effect"]]
+                      ["/flip_vertical", "/flip_horizontally", "/reflection_diagonally"],
+                      ["/white_black", "/blur", "/3D_effect"]]
     markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
 
     update.message.reply_text("Для начала работы или изменения фото отправте его, \n"
@@ -45,7 +47,9 @@ def help(update, context):
                               "/turn_left - поворот влево \n"
                               "/flip_vertical - отаржение по вертикали \n"
                               "/flip_horizontally - отражение по горизонтали \n"
+                              "/reflection_diagonally - отражение по горизонтали \n"
                               "/while_black - черно-белый эффект \n"
+                              "/blur - размытие изображения \n"
                               "/3D_effect - получение 3D эффекта",
                               reply_markup=markup)
 
@@ -62,8 +66,8 @@ def new_image(update, context):
     out.close()
     # Создаем клавиатуру
     reply_keyboard = [["/turn_right", "/turn_left"],
-                      ["/flip_vertical", "/flip_horizontally"],
-                      ["/white_black", "/3D_effect"]]
+                      ["/flip_vertical", "/flip_horizontally", "/reflection_diagonally"],
+                      ["/white_black", "/blur", "/3D_effect"]]
     markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
 
     update.message.reply_text("Изображение успешно получено",
@@ -87,7 +91,9 @@ def main():
     turn_left_handler = CommandHandler("turn_left", image_functions.turn_left)
     flip_vertical_handler = CommandHandler("flip_vertical", image_functions.flip_vertical)
     flip_horizontally_handler = CommandHandler("flip_horizontally", image_functions.flip_horizontally)
+    reflection_diagonally_handler = CommandHandler("reflection_diagonally", image_functions.reflection_diagonally)
     white_black_handler = CommandHandler("white_black", image_functions.white_black)
+    blur_handler = CommandHandler("blur", image_functions.blur)
     effect_handler = CommandHandler("3D_effect", image_functions.getting_the_3D_effect)
 
     # Регистрируем обработчики
@@ -99,7 +105,9 @@ def main():
     dp.add_handler(turn_left_handler)
     dp.add_handler(flip_vertical_handler)
     dp.add_handler(flip_horizontally_handler)
+    dp.add_handler(reflection_diagonally_handler)
     dp.add_handler(white_black_handler)
+    dp.add_handler(blur_handler)
     dp.add_handler(effect_handler)
 
     # Создадим клавиатуру для выбора одной из команд

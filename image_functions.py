@@ -1,4 +1,6 @@
-from PIL import Image
+# Импортируем нужную библиотеки
+
+from PIL import Image, ImageFilter
 
 
 # Поворот вправо
@@ -43,6 +45,16 @@ def flip_horizontally(update, context):
     context.bot.send_photo(chat_id=id, photo=open("telegram_image.jpg", "rb"))
 
 
+# Отражение по диагонали
+def reflection_diagonally(update, context):
+    im = Image.open("telegram_image.jpg")
+    im = im.transpose(Image.FLIP_LEFT_RIGHT)
+    im = im.transpose(Image.ROTATE_270)
+    im.save("telegram_image.jpg")
+    id = update.message.chat.id
+    context.bot.send_photo(chat_id=id, photo=open("telegram_image.jpg", "rb"))
+
+
 # Черно-белые эффект
 def white_black(update, context):
     im = Image.open("telegram_image.jpg")
@@ -53,6 +65,15 @@ def white_black(update, context):
             r, g, b = pix_s[i, j]
             bw = (r + g + b) // 3
             pix_s[i, j] = bw, bw, bw
+    im.save("telegram_image.jpg")
+    id = update.message.chat.id
+    context.bot.send_photo(chat_id=id, photo=open("telegram_image.jpg", "rb"))
+
+
+# Размытие
+def blur(update, context):
+    im = Image.open("telegram_image.jpg")
+    im = Image.filter(ImageFilter.GaussianBlur(radius=10))
     im.save("telegram_image.jpg")
     id = update.message.chat.id
     context.bot.send_photo(chat_id=id, photo=open("telegram_image.jpg", "rb"))
