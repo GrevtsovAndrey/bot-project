@@ -7,6 +7,7 @@ from PIL import Image, ImageFilter
 def turn_right(update, context):
     im = Image.open("telegram_image.jpg")
     im.transpose(Image.ROTATE_270).save('telegram_image.jpg')
+    im.save("telegram_image.jpg")
     id = update.message.chat.id
     context.bot.send_photo(chat_id=id, photo=open("telegram_image.jpg", "rb"))
 
@@ -15,6 +16,7 @@ def turn_right(update, context):
 def turn_left(update, context):
     im = Image.open("telegram_image.jpg")
     im.transpose(Image.ROTATE_90).save('telegram_image.jpg')
+    im.save("telegram_image.jpg")
     id = update.message.chat.id
     context.bot.send_photo(chat_id=id, photo=open("telegram_image.jpg", "rb"))
 
@@ -41,6 +43,7 @@ def flip_horizontally(update, context):
         for j in range(y):
             pix_s[i, j], pix_s[x - i - 1, j] = pix_s[x - i - 1, j], pix_s[i, j]
     im.transpose(Image.ROTATE_180).save('telegram_image.jpg')
+    im.save("telegram_image.jpg")
     id = update.message.chat.id
     context.bot.send_photo(chat_id=id, photo=open("telegram_image.jpg", "rb"))
 
