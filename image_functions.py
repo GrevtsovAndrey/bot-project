@@ -76,7 +76,7 @@ def white_black(update, context):
 # Размытие
 def blur(update, context):
     im = Image.open("telegram_image.jpg")
-    im = Image.filter(ImageFilter.GaussianBlur(radius=10))
+    im = im.filter(ImageFilter.GaussianBlur(radius=5))
     im.save("telegram_image.jpg")
     id = update.message.chat.id
     context.bot.send_photo(chat_id=id, photo=open("telegram_image.jpg", "rb"))
